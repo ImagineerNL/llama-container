@@ -1,0 +1,20 @@
+{
+    "model": "/models/unsloth/gemma-4-26B-A4B-it-GGUF/gemma-4-26B-A4B-it-UD-Q4_K_XL.gguf",
+    "alias": "Unsloth/Gemma-4-26B-A4b",
+    "mmproj": "/models/unsloth/gemma-4-26B-A4B-it-GGUF/mmproj-BF16.gguf",
+    "temp": 1.0,
+    "top_p": 0.95,
+    "top_k": 64,
+    "repetition_penalty": 1.0,
+    "min_p": 0.01,
+    "presence_penalty": 0.0,
+    "kv_unified": true,
+    "cache_type_k": "bf16",
+    "cache_type_v": "bf16",
+    "flash_attn": true,
+    "fit": true,
+    "batch_size": 4096,
+    "ubatch_size": 1024,
+    "ctx_size": 0,
+    "n_gpu_layers": 18
+}

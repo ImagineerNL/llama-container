@@ -1,0 +1,20 @@
+{
+    "model": "/models/unsloth/Qwen3.6-35B-A3B-GGUF/Qwen3.6-35B-A3B-UD-IQ4_NL_XL.gguf",
+    "alias": "Unsloth/QWEN3.6-IQ4",
+    "mmproj": "",
+    "temp": 0.6,
+    "top_p": 0.95,
+    "top_k": 20,
+    "repetition_penalty": 1.0,
+    "min_p": 0.0,
+    "presence_penalty": 0.0,
+    "kv_unified": true,
+    "cache_type_k": "q4_0",
+    "cache_type_v": "q4_0",
+    "flash_attn": true,
+    "fit": false,
+    "batch_size": 4096,
+    "ubatch_size": 1024,
+    "ctx_size": 65536,
+    "n_gpu_layers": 99
+}

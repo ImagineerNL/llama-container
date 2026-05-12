@@ -1,0 +1,58 @@
+services:
+  llama-server:
+    build:
+      context: .
+      args:
+        # Pass UID/GID to the build to map the internal user correctly
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        # Pick the images you want the container based on. tip: For GGUF LLM Models CUDA 13.2 is not advised yet.
+        ARG BASE_BUILD_IMAGE: nvidia/cuda:13.1.2-devel-ubuntu24.04
+        BASE_RUN_IMAGE: nvidia/cuda:13.1.2-runtime-ubuntu24.04
+        CUDA_ARCH: 89
+        # Replace 89 with your specific GPU architecture:
+        # 100: RTX 50-series
+        #  89: RTX 40-series
+        #  86: RTX 30-series
+        #  75: RTX 20-series
+        #  80: A100 / A800
+        #  90: H100
+    container_name: llama-server
+    user: "${UID:-1000}:${GID:-1000}"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      # Mount models directory 
+      - ./LLM_Model:/models:ro
+      # Mount config files and folders
+      - ./config:/config
+      # Templates Directory
+      - ./__backup:/__backup:ro
+    environment:
+      # Llama.cpp model specific settings will load from JSON config
+      - LLAMA_CONFIG_FILE_PATH=/config/llama_default.json
+      - LLAMA_API_KEY=sk-dummy-key
+      - LLAMA_PORT=8001               # If you change this, also update ANTHROPIC_BASE_URL
+      - LLAMA_LOG_LEVEL=3             # LOG LEVELS -1= no log, 0= generic, 1= error, 2= warning, 3= info, 4= debug (default 3)
+      - LLAMA_REASONING=-1            # REASONING/THINKING -1= not set (use model default mode), 0= Off, 1= On
+      - LLAMA_MODEL_UNLOAD_IDLE_S=300 # Unload model after x seconds of idle. -1 keeps model loaded
+      - LLAMA_WEBUI=true              # Set to false to disable webchat on LLAMA_BASE_URL and save resources
+      - CUDA_FORCE_FP16=false         # Force FP16 compute instead of FP32
+      - CUDA_SHARED_MEMORY=false      # Enable Offload to RAM when VRAM is full
+    hostname: llama-docker
+    networks:
+      - llama-network
+    ports:
+      - 8001:8001
+    tty: true
+    stdin_open: true
+
+networks:
+  llama-network:
+    driver: bridge
+    name: llama-network
